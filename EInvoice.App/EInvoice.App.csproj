@@ -6,6 +6,11 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <Content Include="..\data\invoice-template.json">
+      <Link>invoice-template.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\data\customer-data.json">
+      <Link>customer-data.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

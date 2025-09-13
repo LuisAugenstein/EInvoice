@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Müller GmbH",
+    "electronicAddress": "info@mueller-gmbh.de"
+  },
+  {
+    "name": "Schmidt AG",
+    "electronicAddress": "kontakt@schmidt-ag.com"
+  },
+  {
+    "name": "Weber KG",
+    "electronicAddress": "service@weber-kg.org"
+  }
+]

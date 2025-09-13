@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,7 @@ public partial class MainWindow : Window
 {
     private ObservableCollection<Customer> _customers = new();
     private ObservableCollection<Position> _positions = new();
+    private List<CustomerData> _customerData = new();
 
     public MainWindow()
     {
@@ -29,13 +31,60 @@ public partial class MainWindow : Window
 
     private void InitializeData()
     {
-        // Initialize sample customers
-        _customers.Add(new Customer { Name = "Musterfirma GmbH" });
-        _customers.Add(new Customer { Name = "Beispiel AG" });
-        _customers.Add(new Customer { Name = "Demo KG" });
+        // Load customers from customer-data.json
+        LoadCustomerData();
         
         // Set default date to today
         InvoiceDatePicker.SelectedDate = DateTime.Today;
+    }
+
+    private void LoadCustomerData()
+    {
+        try
+        {
+            // Get the path to the customer-data.json file in the application directory
+            string customerDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "customer-data.json");
+            
+            // Check if the customer data file exists
+            if (File.Exists(customerDataPath))
+            {
+                // Read the JSON file content
+                string jsonContent = File.ReadAllText(customerDataPath);
+                
+                // Load customer data
+                _customerData = CustomerData.LoadFromJson(jsonContent);
+                
+                // Convert to Customer objects and add to the collection
+                foreach (var customerData in _customerData)
+                {
+                    _customers.Add(new Customer 
+                    { 
+                        Name = customerData.Name 
+                    });
+                }
+            }
+            else
+            {
+                // Initialize sample customers if file doesn't exist
+                _customers.Add(new Customer { Name = "Musterfirma GmbH" });
+                _customers.Add(new Customer { Name = "Beispiel AG" });
+                _customers.Add(new Customer { Name = "Demo KG" });
+            }
+        }
+        catch
+        {
+            // Initialize sample customers if there's an error
+            _customers.Add(new Customer { Name = "Musterfirma GmbH" });
+            _customers.Add(new Customer { Name = "Beispiel AG" });
+            _customers.Add(new Customer { Name = "Demo KG" });
+        }
+    }
+
+    private string GetCustomerElectronicAddress(string customerName)
+    {
+        // Try to find the customer in the customer data
+        var customer = _customerData.Find(c => c.Name == customerName);
+        return customer?.ElectronicAddress ?? "customer@example.com";
     }
 
     private void SetupBindings()
@@ -171,9 +220,10 @@ public partial class MainWindow : Window
             if (CustomerComboBox.SelectedItem is Customer selectedCustomer)
             {
                 userInput.Buyer.Name = selectedCustomer.Name;
-                // For now, we'll use a placeholder email address
-                // In a real application, you would get this from the customer data
-                userInput.Buyer.ElectronicAddress = "customer@example.com";
+                
+                // Try to find the electronic address for the selected customer
+                string electronicAddress = GetCustomerElectronicAddress(selectedCustomer.Name);
+                userInput.Buyer.ElectronicAddress = electronicAddress;
             }
             
             // Get the path to the invoice-template.json file in the application directory
