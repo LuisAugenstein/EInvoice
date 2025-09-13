@@ -213,7 +213,8 @@ public partial class MainWindow : Window
             {
                 Number = InvoiceNumberTextBox.Text,
                 IssueDate = InvoiceDatePicker.SelectedDate ?? DateTime.Now,
-                Buyer = new Buyer()
+                Buyer = new Buyer(),
+                Positions = CollectPositionsData()
             };
             
             // Set buyer information if a customer is selected
@@ -347,5 +348,34 @@ public partial class MainWindow : Window
     private static bool IsDecimalTextAllowed(string text)
     {
         return decimal.TryParse(text, out _) || text == "." || text == ",";
+    }
+
+    private List<InvoicePosition> CollectPositionsData()
+    {
+        var positions = new List<InvoicePosition>();
+        
+        // Iterate through all the position panels
+        foreach (var child in PositionsPanel.Children)
+        {
+            if (child is Border positionBorder && positionBorder.Child is StackPanel stackPanel)
+            {
+                // Extract data from the controls in the stack panel
+                var nameTextBox = stackPanel.Children[1] as TextBox; // Name textbox is at index 1
+                var quantityTextBox = stackPanel.Children[3] as TextBox; // Quantity textbox is at index 3
+                var amountTextBox = stackPanel.Children[5] as TextBox; // Amount textbox is at index 5
+                
+                // Create a new InvoicePosition object with the extracted data
+                var position = new InvoicePosition
+                {
+                    Name = nameTextBox?.Text ?? string.Empty,
+                    Quantity = int.TryParse(quantityTextBox?.Text, out int quantity) ? quantity : 0,
+                    NetUnitPrice = decimal.TryParse(amountTextBox?.Text, out decimal amount) ? amount : 0
+                };
+                
+                positions.Add(position);
+            }
+        }
+        
+        return positions;
     }
 }
