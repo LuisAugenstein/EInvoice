@@ -15,6 +15,17 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="..\data-prod\invoice-template.json">
+      <Link>invoice-template.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\data-prod\customer-data.json">
+      <Link>customer-data.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
