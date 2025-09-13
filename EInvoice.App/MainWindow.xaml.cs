@@ -222,11 +222,17 @@ public partial class MainWindow : Window
                     
                     if (success)
                     {
-                        MessageBox.Show("Invoice PDF has been successfully created.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Create the path to the generated PDF
+                        string pdfPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice.pdf");
+                        
+                        // Show the custom success dialog
+                        SuccessDialog dialog = new SuccessDialog(pdfPath);
+                        dialog.Owner = this;
+                        dialog.ShowDialog();
                     }
                     else
                     {
-                        MessageBox.Show("Error creating invoice PDF. Please check that PDF24 Toolbox is properly installed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Fehler beim Erstellen der E-Rechnung. Bitte überprüfen Sie, ob PDF24 Toolbox korrekt installiert ist.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else
@@ -235,7 +241,7 @@ public partial class MainWindow : Window
                     ProgressPanel.Visibility = Visibility.Collapsed;
                     SaveButton.IsEnabled = true;
                     
-                    MessageBox.Show("pdf24-Toolbox.exe not found at the expected location. Please ensure PDF24 Toolbox is installed.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("pdf24-Toolbox.exe wurde nicht am erwarteten Speicherort gefunden. Bitte stellen Sie sicher, dass PDF24 Toolbox installiert ist.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else
@@ -244,7 +250,7 @@ public partial class MainWindow : Window
                 ProgressPanel.Visibility = Visibility.Collapsed;
                 SaveButton.IsEnabled = true;
                 
-                MessageBox.Show("Invoice template file not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Die Rechnungsvorlage wurde nicht gefunden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
         catch (Exception ex)
@@ -253,7 +259,7 @@ public partial class MainWindow : Window
             ProgressPanel.Visibility = Visibility.Collapsed;
             SaveButton.IsEnabled = true;
             
-            MessageBox.Show($"Error processing invoice: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Fehler beim Verarbeiten der E-Rechnung: {ex.Message}", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

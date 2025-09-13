@@ -1,6 +1,6 @@
 # EInvoice
 
-Application to create Zugferd Invoices and automatically send them per Mail.
+Vibe-Coded application to create Zugferd Invoices and automatically send them per Mail.
 
 Install [pdf24](https://www.pdf24.org/de/) locally on your system. 
 ```
