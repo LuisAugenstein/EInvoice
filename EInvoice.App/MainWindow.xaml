@@ -54,7 +54,7 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="SaveButton" Content="Speichern" Width="100" Height="30" Margin="0,0,10,0"/>
+            <Button x:Name="SaveButton" Content="Speichern" Width="100" Height="30" Margin="0,0,10,0" Click="SaveButton_Click"/>
             <Button x:Name="CancelButton" Content="Abbrechen" Width="100" Height="30" Click="CancelButton_Click"/>
         </StackPanel>
     </Grid>

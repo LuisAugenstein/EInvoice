@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -145,6 +148,83 @@ public partial class MainWindow : Window
     {
         // Allow numeric and decimal point
         e.Handled = !IsDecimalTextAllowed(e.Text);
+    }
+
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Get the path to the invoice-template.json file in the application directory
+            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice-template.json");
+            
+            // Check if the template file exists
+            if (File.Exists(templatePath))
+            {
+                // Read the JSON template file content
+                string jsonContent = File.ReadAllText(templatePath);
+                
+                // Create the output invoice.json file path
+                string invoicePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice.json");
+                
+                // Write the template content to invoice.json
+                File.WriteAllText(invoicePath, jsonContent);
+                
+                // Define the path to pdf24-Toolbox.exe
+                string pdf24ToolboxPath = @"C:\Program Files\PDF24\pdf24-Toolbox.exe";
+                
+                // Check if pdf24-Toolbox.exe exists
+                if (File.Exists(pdf24ToolboxPath))
+                {
+                    // Create the process start info for pdf24-Toolbox.exe
+                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    {
+                        FileName = pdf24ToolboxPath,
+                        Arguments = $"-createInvoice \"{invoicePath}\" \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice.pdf")}\" -outputType zugferd:xrechnung",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+                    
+                    // Start the process
+                    using (Process? process = Process.Start(startInfo))
+                    {
+                        if (process != null)
+                        {
+                            // Wait for the process to finish
+                            process.WaitForExit();
+                            
+                            // Check the exit code
+                            if (process.ExitCode == 0)
+                            {
+                                MessageBox.Show("Invoice PDF has been successfully created.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                            {
+                                string errorOutput = process.StandardError.ReadToEnd();
+                                MessageBox.Show($"Error creating invoice PDF. Exit code: {process.ExitCode}\nError: {errorOutput}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to start pdf24-Toolbox.exe.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("pdf24-Toolbox.exe not found at the expected location.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invoice template file not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error processing invoice: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)

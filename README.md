@@ -4,7 +4,7 @@ Application to create Zugferd Invoices and automatically send them per Mail.
 
 Install [pdf24](https://www.pdf24.org/de/) locally on your system. 
 ```
-& "C:\Program Files\PDF24\pdf24-Toolbox.exe" -createInvoice ".\data\Rechnungsvorlage.json" ".\data\my_invoice.pdf" -outputType zugferd:xrechnung
+& "C:\Program Files\PDF24\pdf24-Toolbox.exe" -createInvoice ".\invoice.json" ".\invoice.pdf" -outputType zugferd:xrechnung
 ```
 
 ## Export 
