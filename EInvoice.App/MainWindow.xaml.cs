@@ -159,6 +159,23 @@ public partial class MainWindow : Window
         
         try
         {
+            // Create UserInput object with user data
+            var userInput = new UserInput
+            {
+                Number = InvoiceNumberTextBox.Text,
+                IssueDate = InvoiceDatePicker.SelectedDate ?? DateTime.Now,
+                Buyer = new Buyer()
+            };
+            
+            // Set buyer information if a customer is selected
+            if (CustomerComboBox.SelectedItem is Customer selectedCustomer)
+            {
+                userInput.Buyer.Name = selectedCustomer.Name;
+                // For now, we'll use a placeholder email address
+                // In a real application, you would get this from the customer data
+                userInput.Buyer.ElectronicAddress = "customer@example.com";
+            }
+            
             // Get the path to the invoice-template.json file in the application directory
             string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice-template.json");
             
@@ -168,11 +185,14 @@ public partial class MainWindow : Window
                 // Read the JSON template file content
                 string jsonContent = File.ReadAllText(templatePath);
                 
+                // Update the template with user inputs
+                string updatedJsonContent = userInput.UpdateInvoiceTemplate(jsonContent);
+                
                 // Create the output invoice.json file path
                 string invoicePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "invoice.json");
                 
-                // Write the template content to invoice.json
-                File.WriteAllText(invoicePath, jsonContent);
+                // Write the updated content to invoice.json
+                File.WriteAllText(invoicePath, updatedJsonContent);
                 
                 // Define the path to pdf24-Toolbox.exe
                 string pdf24ToolboxPath = @"C:\Program Files\PDF24\pdf24-Toolbox.exe";
