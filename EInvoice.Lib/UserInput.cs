@@ -47,15 +47,20 @@ namespace EInvoice.Lib
                         
                         // Add new items based on positions
                         var items = new JsonArray();
+                        decimal itemsNetAmount = 0;
+                        
                         foreach (var position in Positions)
                         {
                             var vatRate = 19m; // 19% VAT
                             var netUnitPrice = position.NetUnitPrice;
                             var grossUnitPrice = netUnitPrice * 1.19m;
                             var quantity = position.Quantity;
-                            var netAmount = netUnitPrice * quantity;
+                            var positionNetAmount = netUnitPrice * quantity;
                             var grossAmount = grossUnitPrice * quantity;
-                            var vatAmount = grossAmount - netAmount;
+                            var vatAmount = grossAmount - positionNetAmount;
+                            
+                            // Add to total items net amount
+                            itemsNetAmount += positionNetAmount;
                             
                             var item = new JsonObject
                             {
@@ -72,7 +77,7 @@ namespace EInvoice.Lib
                                 ["vatRate"] = vatRate,
                                 ["netUnitPrice"] = netUnitPrice,
                                 ["grossUnitPrice"] = grossUnitPrice,
-                                ["netAmount"] = netAmount,
+                                ["netAmount"] = positionNetAmount,
                                 ["grossAmount"] = grossAmount,
                                 ["vatAmount"] = vatAmount,
                                 ["billingPeriodStart"] = "",
@@ -87,6 +92,40 @@ namespace EInvoice.Lib
                         }
                         
                         jsonObject["items"] = items;
+                        
+                        // Update totals
+                        var netAmount = itemsNetAmount;
+                        var vatAmountTotal = netAmount * 0.19m;
+                        var grossAmountTotal = netAmount + vatAmountTotal;
+                        
+                        if (jsonObject["totals"] is JsonObject totalsNode)
+                        {
+                            totalsNode["allowancesNetAmount"] = 0;
+                            totalsNode["chargesNetAmount"] = 0;
+                            totalsNode["dueAmount"] = grossAmountTotal;
+                            totalsNode["grossAmount"] = grossAmountTotal;
+                            totalsNode["itemsNetAmount"] = itemsNetAmount;
+                            totalsNode["netAmount"] = netAmount;
+                            totalsNode["paidAmount"] = 0;
+                            totalsNode["roundingAmount"] = 0;
+                            totalsNode["vatAmount"] = vatAmountTotal;
+                        }
+                        
+                        // Update taxes
+                        if (jsonObject["taxes"] is JsonObject taxesNode)
+                        {
+                            var taxEntry = new JsonObject
+                            {
+                                ["code"] = "S",
+                                ["rate"] = 19,
+                                ["netAmount"] = netAmount,
+                                ["vatAmount"] = vatAmountTotal,
+                                ["exemptionReason"] = "",
+                                ["exemptionReasonCode"] = ""
+                            };
+                            
+                            taxesNode["S-19"] = taxEntry;
+                        }
                     }
                     
                     // Serialize back to JSON
