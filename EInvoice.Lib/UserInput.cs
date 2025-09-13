@@ -34,6 +34,14 @@ namespace EInvoice.Lib
                         buyerNode["name"] = Buyer.Name ?? string.Empty;
                         buyerNode["electronicAddress"] = Buyer.ElectronicAddress ?? string.Empty;
                         buyerNode["electronicAddressTypeCode"] = "EM";
+                        
+                        // Update buyer address if available
+                        if (buyerNode["address"] is JsonObject addressNode)
+                        {
+                            addressNode["city"] = Buyer.Address.City ?? string.Empty;
+                            addressNode["line1"] = Buyer.Address.Line1 ?? string.Empty;
+                            addressNode["postCode"] = Buyer.Address.PostCode ?? string.Empty;
+                        }
                     }
                     
                     // Update items/positions information
@@ -145,6 +153,7 @@ namespace EInvoice.Lib
     {
         public string Name { get; set; } = string.Empty;
         public string ElectronicAddress { get; set; } = string.Empty;
+        public Address Address { get; set; } = new EInvoice.Lib.Address();
     }
 
     public class InvoicePosition

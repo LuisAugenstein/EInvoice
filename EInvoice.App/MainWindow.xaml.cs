@@ -87,6 +87,18 @@ public partial class MainWindow : Window
         return customer?.ElectronicAddress ?? "customer@example.com";
     }
 
+    private void GetCustomerAddress(string customerName, Buyer buyer)
+    {
+        // Try to find the customer in the customer data
+        var customer = _customerData.Find(c => c.Name == customerName);
+        if (customer != null)
+        {
+            buyer.Address.City = customer.Address.City;
+            buyer.Address.Line1 = customer.Address.Line1;
+            buyer.Address.PostCode = customer.Address.PostCode;
+        }
+    }
+
     private void SetupBindings()
     {
         // Bind customers to the ComboBox
@@ -225,6 +237,9 @@ public partial class MainWindow : Window
                 // Try to find the electronic address for the selected customer
                 string electronicAddress = GetCustomerElectronicAddress(selectedCustomer.Name);
                 userInput.Buyer.ElectronicAddress = electronicAddress;
+                
+                // Try to find the address for the selected customer
+                GetCustomerAddress(selectedCustomer.Name, userInput.Buyer);
             }
             
             // Get the path to the invoice-template.json file in the application directory

@@ -1,14 +1,29 @@
 [
   {
     "name": "Müller GmbH",
-    "electronicAddress": "info@mueller-gmbh.de"
+    "electronicAddress": "info@mueller-gmbh.de",
+    "address": {
+      "city": "Berlin",
+      "line1": "Alexanderplatz 1",
+      "postCode": "10178"
+    }
   },
   {
     "name": "Schmidt AG",
-    "electronicAddress": "kontakt@schmidt-ag.com"
+    "electronicAddress": "kontakt@schmidt-ag.com",
+    "address": {
+      "city": "Hamburg",
+      "line1": "Neuer Wall 42",
+      "postCode": "20354"
+    }
   },
   {
     "name": "Weber KG",
-    "electronicAddress": "service@weber-kg.org"
+    "electronicAddress": "service@weber-kg.org",
+    "address": {
+      "city": "München",
+      "line1": "Maximilianstraße 15",
+      "postCode": "80539"
+    }
   }
 ]

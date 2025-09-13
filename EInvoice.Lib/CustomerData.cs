@@ -8,6 +8,7 @@ namespace EInvoice.Lib
     {
         public string Name { get; set; } = string.Empty;
         public string ElectronicAddress { get; set; } = string.Empty;
+        public Address Address { get; set; } = new Address();
 
         public static List<CustomerData> LoadFromJson(string jsonContent)
         {
@@ -25,5 +26,12 @@ namespace EInvoice.Lib
                 return new List<CustomerData>();
             }
         }
+    }
+
+    public class Address
+    {
+        public string City { get; set; } = string.Empty;
+        public string Line1 { get; set; } = string.Empty;
+        public string PostCode { get; set; } = string.Empty;
     }
 }
