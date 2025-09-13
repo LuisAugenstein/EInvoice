@@ -37,12 +37,19 @@
         <!-- Positionen Header -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,20,0,10">
             <Label Content="Positionen:" FontSize="16" FontWeight="Bold"/>
-            <Button x:Name="AddPositionButton" Content="+" Width="30" Height="30" Margin="10,0,0,0" Click="AddPositionButton_Click"/>
         </StackPanel>
 
-        <!-- Positionen List -->
+        <!-- Scrollable area for positions and add button -->
         <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="PositionsPanel" Margin="0,0,0,10"/>
+            <StackPanel x:Name="MainContentPanel">
+                <!-- Positionen List -->
+                <StackPanel x:Name="PositionsPanel" Margin="0,0,0,10"/>
+                
+                <!-- Add Position Button (centered) -->
+                <StackPanel x:Name="AddButtonPanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <Button x:Name="AddPositionButton" Content="+" Width="30" Height="30" Click="AddPositionButton_Click"/>
+                </StackPanel>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Action Buttons -->

@@ -72,30 +72,41 @@ public partial class MainWindow : Window
             VerticalContentAlignment = VerticalAlignment.Center
         };
 
-        // Quantity field
+        // Quantity field (using TextBox for now, will improve later)
         var quantityLabel = new Label { Content = "Anzahl:", Width = 80, VerticalAlignment = VerticalAlignment.Center };
         var quantityTextBox = new TextBox 
         { 
             Width = 80, 
             Margin = new Thickness(0, 0, 10, 0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            Text = "1"
+            Text = "1",
+            HorizontalContentAlignment = HorizontalAlignment.Right
         };
         quantityTextBox.PreviewTextInput += QuantityTextBox_PreviewTextInput;
 
-        // Amount field
-        var amountLabel = new Label { Content = "Betrag:", Width = 80, VerticalAlignment = VerticalAlignment.Center };
+        // Amount field with Euro symbol
+        var amountLabel = new Label { Content = "Betrag (€):", Width = 80, VerticalAlignment = VerticalAlignment.Center };
         var amountTextBox = new TextBox 
         { 
             Width = 100, 
             Margin = new Thickness(0, 0, 10, 0),
-            VerticalContentAlignment = VerticalAlignment.Center
+            VerticalContentAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Right
         };
         amountTextBox.PreviewTextInput += AmountTextBox_PreviewTextInput;
 
-        // Remove button
-        var removeButton = new Button { Content = "-", Width = 30, Height = 30 };
-        removeButton.Click += (s, e) => PositionsPanel.Children.Remove(positionPanel);
+        // Remove button with trash icon simulation
+        var removeButton = new Button 
+        { 
+            Content = "🗑", 
+            Width = 30, 
+            Height = 30,
+            Background = Brushes.Red,
+            Foreground = Brushes.White,
+            ToolTip = "Position entfernen",
+            FontWeight = FontWeights.Bold
+        };
+        removeButton.Click += (s, e) => RemovePosition(positionPanel);
 
         // Add controls to the panel
         stackPanel.Children.Add(nameLabel);
@@ -107,7 +118,15 @@ public partial class MainWindow : Window
         stackPanel.Children.Add(removeButton);
 
         positionPanel.Child = stackPanel;
+        
+        // Add the new position before the add button
         PositionsPanel.Children.Add(positionPanel);
+    }
+
+    private void RemovePosition(Border positionPanel)
+    {
+        // Remove the position from the panel
+        PositionsPanel.Children.Remove(positionPanel);
     }
 
     private void InvoiceNumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
