@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -150,8 +151,12 @@ public partial class MainWindow : Window
         e.Handled = !IsDecimalTextAllowed(e.Text);
     }
 
-    private void SaveButton_Click(object sender, RoutedEventArgs e)
+    private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
+        // Show progress indicator
+        ProgressPanel.Visibility = Visibility.Visible;
+        SaveButton.IsEnabled = false;
+        
         try
         {
             // Get the path to the invoice-template.json file in the application directory
@@ -186,43 +191,68 @@ public partial class MainWindow : Window
                         RedirectStandardError = true
                     };
                     
-                    // Start the process
-                    using (Process? process = Process.Start(startInfo))
+                    // Run the process asynchronously
+                    bool success = await Task.Run(() =>
                     {
-                        if (process != null)
+                        try
                         {
-                            // Wait for the process to finish
-                            process.WaitForExit();
-                            
-                            // Check the exit code
-                            if (process.ExitCode == 0)
+                            // Start the process
+                            using (Process? process = Process.Start(startInfo))
                             {
-                                MessageBox.Show("Invoice PDF has been successfully created.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
-                            else
-                            {
-                                string errorOutput = process.StandardError.ReadToEnd();
-                                MessageBox.Show($"Error creating invoice PDF. Exit code: {process.ExitCode}\nError: {errorOutput}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                if (process != null)
+                                {
+                                    // Wait for the process to finish
+                                    process.WaitForExit();
+                                    
+                                    // Check the exit code
+                                    return process.ExitCode == 0;
+                                }
                             }
                         }
-                        else
+                        catch
                         {
-                            MessageBox.Show("Failed to start pdf24-Toolbox.exe.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            // Ignore exceptions in the task, they'll be handled in the main thread
                         }
+                        return false;
+                    });
+                    
+                    // Hide progress indicator
+                    ProgressPanel.Visibility = Visibility.Collapsed;
+                    SaveButton.IsEnabled = true;
+                    
+                    if (success)
+                    {
+                        MessageBox.Show("Invoice PDF has been successfully created.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error creating invoice PDF. Please check that PDF24 Toolbox is properly installed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("pdf24-Toolbox.exe not found at the expected location.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // Hide progress indicator
+                    ProgressPanel.Visibility = Visibility.Collapsed;
+                    SaveButton.IsEnabled = true;
+                    
+                    MessageBox.Show("pdf24-Toolbox.exe not found at the expected location. Please ensure PDF24 Toolbox is installed.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else
             {
+                // Hide progress indicator
+                ProgressPanel.Visibility = Visibility.Collapsed;
+                SaveButton.IsEnabled = true;
+                
                 MessageBox.Show("Invoice template file not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
         catch (Exception ex)
         {
+            // Hide progress indicator
+            ProgressPanel.Visibility = Visibility.Collapsed;
+            SaveButton.IsEnabled = true;
+            
             MessageBox.Show($"Error processing invoice: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
