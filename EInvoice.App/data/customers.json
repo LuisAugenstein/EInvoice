@@ -1,0 +1,33 @@
+{
+  "EInvoiceOptions": {
+    "Customers": [
+      {
+        "name": "Müller GmbH",
+        "email": "info@mueller-gmbh.de",
+        "address": {
+          "city": "Berlin",
+          "street": "Alexanderplatz 1",
+          "postCode": "10178"
+        }
+      },
+      {
+        "name": "Schmidt AG",
+        "email": "kontakt@schmidt-ag.com",
+        "address": {
+          "city": "Hamburg",
+          "street": "Neuer Wall 42",
+          "postCode": "20354"
+        }
+      },
+      {
+        "name": "Weber KG",
+        "email": "service@weber-kg.org",
+        "address": {
+          "city": "München",
+          "street": "Maximilianstraße 15",
+          "postCode": "80539"
+        }
+      }
+    ]
+  }
+}

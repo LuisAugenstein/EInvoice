@@ -1,0 +1,141 @@
+{
+  "allowances": [],
+  "attachments": [],
+  "billingPeriodEndDate": "",
+  "billingPeriodStartDate": "",
+  "buyer": {
+    "address": {
+      "city": "",
+      "countryCode": "DE",
+      "line1": "",
+      "line2": "",
+      "postCode": ""
+    },
+    "contact": {
+      "email": "",
+      "name": "",
+      "phone": ""
+    },
+    "electronicAddress": "customer@web.de",
+    "electronicAddressTypeCode": "EM",
+    "id": "",
+    "idTypeCode": "id",
+    "name": "CustomerName",
+    "tradeId": "",
+    "tradeName": "",
+    "vatId": ""
+  },
+  "buyerAccountingAccounts": [],
+  "buyerReference": "",
+  "buyerReferenceDisabled": true,
+  "charges": [],
+  "contractReference": "",
+  "currencyCode": "EUR",
+  "currencySymbol": "€",
+  "delivery": {
+    "address": {
+      "city": "",
+      "countryCode": "",
+      "line1": "",
+      "line2": "",
+      "line3": "",
+      "postCode": "",
+      "region": ""
+    },
+    "locationId": "",
+    "recipientName": ""
+  },
+  "deliveryDate": "",
+  "despatchAdviceReference": {
+    "id": "",
+    "issueDate": ""
+  },
+  "dueDate": "",
+  "introText": "",
+  "invoiceReferences": [],
+  "issueDate": "",
+  "items": [],
+  "note": "",
+  "number": "1234",
+  "objectReferences": [],
+  "outputOptions": {
+    "attachmentsEmbedMode": "pdf",
+    "dateFormat": "dd.mm.yyyy",
+    "decimalSeparator": ",",
+    "format": "zugferd:xrechnung",
+    "langCode": "de",
+    "logoDisplayMode": "auto",
+    "pageNumbersDisplayMode": "bottom-center",
+    "paymentQrCodeDisplayMode": "shown",
+    "quantityUnitDisplayMode": "combined",
+    "taxCategoryDisplayMode": "shown",
+    "taxDisplayMode": "shown",
+    "taxExemptionReasonsDisplayMode": "shown",
+    "thousandsSeparator": "."
+  },
+  "payment": {
+    "methods": [
+      {
+        "accountName": "",
+        "ban": "",
+        "bankName": "",
+        "bic": "",
+        "iban": "",
+        "typeCode": "58"
+      }
+    ],
+    "reference": "",
+    "terms": ""
+  },
+  "projectReference": "",
+  "purchaseOrderReference": "",
+  "receivingAdviceReference": {
+    "id": "",
+    "issueDate": ""
+  },
+  "salesOrderReference": "",
+  "seller": {
+    "address": {
+      "city": "MyCity",
+      "countryCode": "DE",
+      "line1": "MyStreet",
+      "line2": "",
+      "postCode": "12345"
+    },
+    "applicableRule": "",
+    "contact": {
+      "email": "myEmail@web.de",
+      "fax": "",
+      "name": "MyName",
+      "phone": "1234/5678"
+    },
+    "electronicAddress": "",
+    "electronicAddressTypeCode": "EM",
+    "id": "",
+    "legalInfo": "",
+    "logoData": "",
+    "name": "MyCompany",
+    "taxId": "MyTaxId",
+    "tradeId": "",
+    "tradeName": "",
+    "vatId": "",
+    "websiteText": "",
+    "websiteUrl": "",
+    "weeeId": ""
+  },
+  "taxes": {},
+  "tenderReferences": [],
+  "title": "Rechnung",
+  "totals": {
+    "allowancesNetAmount": 0,
+    "chargesNetAmount": 0,
+    "dueAmount": 0,
+    "grossAmount": 0,
+    "itemsNetAmount": 0,
+    "netAmount": 0,
+    "paidAmount": 0,
+    "roundingAmount": 0,
+    "vatAmount": 0
+  },
+  "typeCode": "380"
+}
