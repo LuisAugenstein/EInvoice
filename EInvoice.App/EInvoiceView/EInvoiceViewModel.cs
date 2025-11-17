@@ -2,12 +2,16 @@
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using EInvoice.Lib.MailClient;
 using EInvoice.Lib.Models;
 using Microsoft.Extensions.Options;
 
 namespace EInvoice.App;
 
-public partial class EInvoiceViewModel(IOptions<EInvoiceOptions> options, IEInvoiceService eInvoiceService)
+public partial class EInvoiceViewModel(
+    IOptions<EInvoiceOptions> options,
+    IEInvoiceService eInvoiceService,
+    IMailClient mailClient)
     : ObservableObject
 {
     private readonly EInvoiceOptions _options = options.Value;
@@ -28,6 +32,14 @@ public partial class EInvoiceViewModel(IOptions<EInvoiceOptions> options, IEInvo
     public IReadOnlyList<string> CustomerNames => options.Value.Customers.Select(c => c.Name).ToList();
     private Customer? SelectedCustomer => _options.Customers.FirstOrDefault(c => c.Name == SelectedCustomerName);
     private bool CanCreateEInvoice => !CreatingEInvoice && SelectedCustomer is not null && InvoiceNumber is not null;
+
+    private void ResetForm()
+    {
+        SelectedCustomerName = null;
+        InvoiceNumber = null;
+        InvoiceDate = DateTime.Today;
+        Positions.Clear();
+    }
 
     [RelayCommand]
     private void AddPosition()
@@ -55,7 +67,7 @@ public partial class EInvoiceViewModel(IOptions<EInvoiceOptions> options, IEInvo
         try
         {
             var pdf24EinvoicePdfPath = await eInvoiceService.GenerateEInvoice(eInvoice);
-            var successDialogViewModel = new SuccessDialogViewModel
+            var successDialogViewModel = new SuccessDialogViewModel(mailClient)
             {
                 EInvoicePdfPath = pdf24EinvoicePdfPath,
                 CustomerEmail = SelectedCustomer!.Email
@@ -65,6 +77,7 @@ public partial class EInvoiceViewModel(IOptions<EInvoiceOptions> options, IEInvo
                 Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
             };
             dialog.ShowDialog();
+            ResetForm();
         }
         catch (Exception e)
         {

@@ -13,10 +13,10 @@ public partial class App
         .ConfigureAppConfiguration((hostingContext, config) =>
         {
             config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddUserSecrets<App>();
             config.AddJsonFile("appsettings.json", false, true);
             config.AddJsonFile("data/customers.json", false, true);
             config.AddJsonFile("data/invoice-template.json", false, true);
+            config.AddUserSecrets<App>();
         })
         .ConfigureServices((context, services) =>
         {

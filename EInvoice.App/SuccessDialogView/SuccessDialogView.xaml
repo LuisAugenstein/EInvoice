@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EInvoice.App"
         mc:Ignorable="d"
-        Title="Erfolg" Height="220" Width="700" WindowStartupLocation="CenterOwner">
+        SizeToContent="Height"
+        Title="Erfolg" Width="700" WindowStartupLocation="CenterOwner">
 
     <Grid Margin="20" d:DataContext="{d:DesignInstance Type=local:SuccessDialogViewModel, IsDesignTimeCreatable=True}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -23,14 +24,25 @@
             <TextBlock Margin="0,0,0,10">
                 <Run Text="PDF-Datei: " />
                 <Hyperlink Command="{Binding OpenPdfCommand}">
-                    <TextBlock Text="{Binding EInvoicePdfPath}" Foreground="Blue" TextWrapping="Wrap" />
+                    <Run Text="{Binding EInvoicePdfPath}" Foreground="Blue" />
                 </Hyperlink>
+                <LineBreak />
+                <Run Text="Soll eine Mail an " />
+                <Run Text="{Binding CustomerEmail}" FontWeight="Bold" />
+                <Run Text=" versendet werden?" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Betreff:" FontWeight="Bold" />
+                <Run Text="{Binding MailSubject}" FontFamily="Consolas" FontStyle="Italic" />
+                <LineBreak /><LineBreak />
+                <Run Text="{Binding MailBody}" FontFamily="Consolas" FontStyle="Italic" />
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
             <Button Content="Versende Email" Width="120" Height="30" Margin="0,0,10,0"
-                    Command="{Binding SendEmailCommand}" />
+                    Command="{Binding SendEmailCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
             <Button Content="Schließen" Width="100" Height="30"
                     Command="{Binding CloseCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
