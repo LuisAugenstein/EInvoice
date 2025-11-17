@@ -10,7 +10,8 @@ The main functionality of this project is to simplify the creation of the json t
 
 ## Publish
 ```bash
-dotnet publish
+cd EInvoice.App
+dotnet publish -c Release --self-contained true /p:PublishSingleFile=true
 ```
 Generate a standalone executable of the application at `EInvoice.App/bin/Release/EInvoiceApp.exe`. 
 The resulting file can be deployed to any location on your system, for example: `C:\Program Files\EInvoiceApp`.
